@@ -13,7 +13,7 @@ class CifraClub():
     def __init__(self):
         selenium_url = os.getenv(
     "SELENIUM_URL",
-    "https://standalone-firefox-latest-z9jw.onrender.com"
+    "https://standalone-firefox-latest-z9jw.onrender.com/wd/hub"
 )
         self.driver = webdriver.Remote(command_executor=selenium_url, desired_capabilities=DesiredCapabilities.FIREFOX)
 
