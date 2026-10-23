@@ -11,7 +11,10 @@ CIFRACLUB_URL = "https://www.cifraclub.com.br/"
 class CifraClub():
     """CifraClub Class"""
     def __init__(self):
-        selenium_url = os.getenv("SELENIUM_URL", "http://selenium:4444/wd/hub")
+        selenium_url = os.getenv(
+    "SELENIUM_URL",
+    "https://standalone-firefox-latest-z9jw.onrender.com"
+)
         self.driver = webdriver.Remote(command_executor=selenium_url, desired_capabilities=DesiredCapabilities.FIREFOX)
 
     def cifra(self, artist: str, song: str) -> dict:
