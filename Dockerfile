@@ -1,16 +1,7 @@
-FROM python:3.8-slim-buster
-
+FROM python:3.11-slim
 WORKDIR /app
-
-RUN pip install \
-  pylint \
-  pylint_flask \
-  pytest \
-  pytest-cov
-
-COPY app/requirements.txt requirements.txt
-RUN pip install -r requirements.txt
-
-COPY app/ .
-
-CMD ["python3", "api.py"]
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
+COPY app/requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+COPY app/ ./
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-3000} --workers 1 --threads 4 --timeout 120 api:app"]

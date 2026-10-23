@@ -1,5 +1,6 @@
 """CifraClub Module"""
 
+import os
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -10,7 +11,8 @@ CIFRACLUB_URL = "https://www.cifraclub.com.br/"
 class CifraClub():
     """CifraClub Class"""
     def __init__(self):
-        self.driver = webdriver.Remote("http://selenium:4444/wd/hub", DesiredCapabilities.FIREFOX)
+        selenium_url = os.getenv("SELENIUM_URL", "http://selenium:4444/wd/hub")
+        self.driver = webdriver.Remote(command_executor=selenium_url, desired_capabilities=DesiredCapabilities.FIREFOX)
 
     def cifra(self, artist: str, song: str) -> dict:
         """Lê a página HTML e extrai a cifra e meta dados da música."""
@@ -22,10 +24,13 @@ class CifraClub():
             self.driver.get(url)
             self.get_details(result)
             self.get_cifra(result)
-            self.driver.quit()
-        except: # pylint: disable=bare-except
-            # NoSuchElementException
-            result['error'] = "error description"
+        except Exception as exc:
+            result['error'] = str(exc)[:500]
+        finally:
+            try:
+                self.driver.quit()
+            except Exception:
+                pass
 
         return result
 
